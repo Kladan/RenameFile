@@ -1,48 +1,61 @@
 ﻿using System.Text.RegularExpressions;
 
-bool removeDate = args.Contains("-remove");
-bool repairDate = args.Contains("-repair");
+bool _removeDate = args.Contains("-remove");
+bool _repairDate = args.Contains("-repair");
 
-string sourceFilePath = args[0];
-string destFilePath = String.Empty;
+string _sourceFilePath = args[0];
 
-if (File.Exists(sourceFilePath))
+RenameFile();
+
+void RenameFile()
 {
-    if (removeDate)
+    if (File.Exists(_sourceFilePath))
     {
-        destFilePath = Regex.Replace(sourceFilePath, "\\d{4}\\-\\d{2}\\-\\d{2} ", "");
+        string destFilePath = ModifyFilename();
+
+        if (!String.IsNullOrEmpty(destFilePath) && _sourceFilePath != destFilePath)
+        {
+            try
+            {
+                File.Move(_sourceFilePath, destFilePath);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.ReadLine();
+                throw;
+            }
+        }
+    }
+}
+
+string ModifyFilename()
+{
+    string destFilePath = String.Empty;
+
+    if (_removeDate)
+    {
+        destFilePath = Regex.Replace(_sourceFilePath, "\\d{4}\\-\\d{2}\\-\\d{2} ", "");
         destFilePath = Regex.Replace(destFilePath, "\\d{4}\\-\\d{2}\\-\\d{2}_", "");
     }
-    else if (repairDate)
+    else if (_repairDate)
     {
-        if (Regex.IsMatch(sourceFilePath, "\\d{8}"))
+        if (Regex.IsMatch(_sourceFilePath, "\\d{8}"))
         {
-            string destFileName = Path.GetFileName(sourceFilePath)
+            string destFileName = Path.GetFileName(_sourceFilePath)
                 .Insert(4, "-")
                 .Insert(7, "-");
 
-            destFilePath = Path.Combine(Path.GetDirectoryName(sourceFilePath), destFileName);
+            destFilePath = Path.Combine(Path.GetDirectoryName(_sourceFilePath), destFileName);
         }
     }
     else
     {
         DateTime now = DateTime.Now;
         string date = now.ToString("yyyy-MM-dd");
-        destFilePath = Path.Combine(Path.GetDirectoryName(sourceFilePath),
-            date + ' ' + Path.GetFileName(sourceFilePath));
+        destFilePath = Path.Combine(Path.GetDirectoryName(_sourceFilePath),
+            date + ' ' + Path.GetFileName(_sourceFilePath));
     }
 
-    if (!String.IsNullOrEmpty(destFilePath) && sourceFilePath != destFilePath)
-    {
-        try
-        {
-            File.Move(sourceFilePath, destFilePath);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            Console.ReadLine();
-            throw;
-        }
-    }
+    return destFilePath;
 }
