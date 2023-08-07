@@ -7,8 +7,23 @@ bool _removeDate = args.Contains("-removeDate");
 bool _repairDate = args.Contains("-repairDate");
 bool _installTool = args.Contains("-install");
 bool _uninstallTool = args.Contains("-uninstall");
+bool _help = ShouldHelp(args);
 
 string _sourceFilePath = args[0];
+
+if (_help)
+{
+    Console.WriteLine("------------------------------------------------------------------");
+    Console.WriteLine(" Die folgenden Parameter stehen zur Verfügung:");
+    Console.WriteLine(" -addDate - Heutiges Datum vorne an den Dateinamen anfügen");
+    Console.WriteLine(" -removeDate - Datum vorne entfernen");
+    Console.WriteLine(" -repairDate - Heutiges Datum vorne reparieren");
+    Console.WriteLine(" -install - Einträge dem Kontextmenü hinzufügen");
+    Console.WriteLine(" -uninstall - Einträge aus dem Kontextmenü entfernen");
+    Console.WriteLine(" Gib außerdem als ersten Parameter den vollständigen Dateipfad an");
+    Console.WriteLine("------------------------------------------------------------------");
+    Console.ReadLine();
+}
 
 if (_installTool)
 {
@@ -35,6 +50,16 @@ if (_addDate || _removeDate || _repairDate)
     RenameFile();
     Console.WriteLine("Zum Fortfahren Enter drücken.");
     Console.ReadLine();
+}
+
+bool ShouldHelp(string[] args)
+{
+    return
+        args.Contains("-h") ||
+        args.Contains("-help") ||
+        args.Contains("--h") ||
+        args.Contains("--help") ||
+        args.Contains("/?");
 }
 
 void RenameFile()
