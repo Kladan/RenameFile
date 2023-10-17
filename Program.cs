@@ -2,7 +2,8 @@
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
-bool _addDate = args.Contains("-addDate");
+bool _addDateToday = args.Contains("-addDateToday");
+bool _addDateLastChange = args.Contains("-addDateLastChange");
 bool _removeDate = args.Contains("-removeDate");
 bool _repairDate = args.Contains("-repairDate");
 bool _installTool = args.Contains("-install");
@@ -15,7 +16,8 @@ if (_help)
 {
     Console.WriteLine("------------------------------------------------------------------");
     Console.WriteLine(" Die folgenden Parameter stehen zur Verfügung:");
-    Console.WriteLine(" -addDate - Heutiges Datum vorne an den Dateinamen anfügen");
+    Console.WriteLine(" -addDateToday - Heutiges Datum vorne an den Dateinamen anfügen");
+    Console.WriteLine(" -addDateLastChange - Änderungsdatum vorne an den Dateinamen anfügen");
     Console.WriteLine(" -removeDate - Datum vorne entfernen");
     Console.WriteLine(" -repairDate - Heutiges Datum vorne reparieren");
     Console.WriteLine(" -install - Einträge dem Kontextmenü hinzufügen");
@@ -45,7 +47,7 @@ if (_uninstallTool)
     }
 }
 
-if (_addDate || _removeDate || _repairDate)
+if (_addDateToday || _addDateLastChange || _removeDate || _repairDate)
 {
     RenameFile();
     Console.WriteLine("Zum Fortfahren Enter drücken.");
@@ -107,12 +109,23 @@ string ModifyFilename()
         }
     }
     
-    if (_addDate)
+    if (_addDateToday)
     {
         DateTime now = DateTime.Now;
         string date = now.ToString("yyyy-MM-dd");
         destFilePath = Path.Combine(Path.GetDirectoryName(_sourceFilePath),
-            date + ' ' + Path.GetFileName(_sourceFilePath));
+            $"{date} {Path.GetFileName(_sourceFilePath)}");
+    }
+
+    if (_addDateLastChange)
+    {
+        FileInfo fileInfo = new FileInfo(_sourceFilePath);
+        if (fileInfo.Exists)
+        {
+            string date = fileInfo.LastWriteTime.ToString("yyyy-MM-dd");
+            destFilePath = Path.Combine(Path.GetDirectoryName(_sourceFilePath),
+                $"{date} {Path.GetFileName(_sourceFilePath)}");
+        }
     }
 
     return destFilePath;
@@ -122,8 +135,11 @@ void AddContextMenuEntries()
 {
     try
     {
-        AddContextMenuEntry("FNDateAdd", "Heutiges Datum vorne anfügen", "-addDate");
+        AddContextMenuEntry("FNDateAddToday", "Heutiges Datum vorne anfügen", "-addDateToday");
         Console.WriteLine("\"Heutiges Datum vorne anfügen\" dem Kontextmenü hinzugefügt.");
+
+        AddContextMenuEntry("FNDateAddLastChange", "Änderungsdatum vorne anfügen", "-addDateLastChange");
+        Console.WriteLine("\"Änderungsdatum vorne anfügen\" dem Kontextmenü hinzugefügt.");
 
         AddContextMenuEntry("FNDateRemove", "Datum vorne entfernen", "-removeDate");
         Console.WriteLine("\"Datum vorne entfernen\" dem Kontextmenü hinzugefügt.");
@@ -162,8 +178,11 @@ void RemoveFromContextMenu()
         RegistryKey root = Registry.ClassesRoot;
         RegistryKey shell = root.OpenSubKey(@"*\shell", true);
 
-        shell.DeleteSubKeyTree("FNDateAdd", false);
+        shell.DeleteSubKeyTree("FNDateAddToday", false);
         Console.WriteLine("\"Heutiges Datum vorne anfügen\" aus dem Kontextmenü entfernt.");
+
+        shell.DeleteSubKeyTree("FNDateAddLastChange", false);
+        Console.WriteLine("\"Änderungsdatum vorne anfügen\" aus dem Kontextmenü entfernt.");
 
         shell.DeleteSubKeyTree("FNDateRemove", false);
         Console.WriteLine("\"Datum vorne entfernen\" aus dem Kontextmenü entfernt.");
