@@ -1,5 +1,6 @@
 .idea/
 .vs/
+.publish/
 bin/
 obj/
 Properties/

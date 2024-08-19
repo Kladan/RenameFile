@@ -5,7 +5,9 @@ VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenameFile", "RenameFile\RenameFile.csproj", "{5DA7E571-FB36-4568-A79F-A1922116800C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenameFileInstaller", "RenameFileInstaller\RenameFileInstaller.csproj", "{8B95579D-F364-4795-97F4-49F9F5A770E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "install", "install\install.csproj", "{8B95579D-F364-4795-97F4-49F9F5A770E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uninstall", "uninstall\uninstall.csproj", "{F80F434A-45EB-45AD-A6B8-23C52C4CB8AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8B95579D-F364-4795-97F4-49F9F5A770E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B95579D-F364-4795-97F4-49F9F5A770E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B95579D-F364-4795-97F4-49F9F5A770E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F80F434A-45EB-45AD-A6B8-23C52C4CB8AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F80F434A-45EB-45AD-A6B8-23C52C4CB8AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F80F434A-45EB-45AD-A6B8-23C52C4CB8AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F80F434A-45EB-45AD-A6B8-23C52C4CB8AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
